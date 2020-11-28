@@ -1,7 +1,13 @@
 package main
 
 import (
+	"gin-cli/logger"
 	"gin-cli/settings"
+	"time"
+
+	ginzap "github.com/gin-contrib/zap"
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 /**
@@ -16,10 +22,16 @@ func main() {
 	}
 
 	//2.初始化日志
+	logger.InitLogger(settings.Conf.LogConfig)
 
 	//3.初始化数据源
 
 	//5.注册路由
+	r := gin.New()
+	//gin框架中使用gin-zap中间件
+	r.Use(ginzap.Ginzap(zap.L(), time.RFC3339, true))
+	r.Use(ginzap.RecoveryWithZap(zap.L(), true))
 
 	//6.启动服务
+
 }
