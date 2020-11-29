@@ -19,9 +19,11 @@ type Config struct {
 }
 
 type AppConfig struct {
-	Name    string `mapstructure:"name"`
-	Mode    string `mapstructure:"mode"`
-	Version string `mapstructure:"version"`
+	Name      string `mapstructure:"name"`
+	Mode      string `mapstructure:"mode"`
+	Version   string `mapstructure:"version"`
+	MachineID int64  `mapstructure:"machine_id"`
+	StartTime string `mapstructure:"start_time"`
 }
 
 type ServerConfig struct {
@@ -49,6 +51,7 @@ type MySQLConfig struct {
 	DbName       string `mapstructure:"db_name"`
 	MaxOpenConns int    `mapstructure:"max_open_conns"`
 	MaxIdleConns int    `mapstructure:"max_idle_conns"`
+	MaxLifetime  int    `mapstructure:"max_life_time"`
 }
 
 type RedisConfig struct {
