@@ -1,29 +1,43 @@
-app:
-  name: "web_app"
-  mode: "dev"
-  version: "0.0.1"
-server:
+system:
+  env: "public"  # Change to "develop" to skip authentication for development mode
   port: 8088
-log:
-  level: "debug"
-  filename: "web_app.log"
-  max_size: 200
-  max_age: 30
-  max_backups: 7
-datasource:
-  mysql: 
-    host: "127.0.0.1"
-    port: 3306
-    user: "root"
-    password: "123456"
-    db_name: "web_app"
-    max_open_conns: 50
-    max_idle_conns: 10
-  redis:
-    host: "127.0.0.1"
-    port: 6379
-    db: 0
-    password: ""
-    pool_size: 10
-
-
+  db-type: "mysql"
+  oss-type: "local"
+  use-multipoint: false
+  version: "0.0.1"
+  machine_id: 1
+  start_time: "2020-11-28" # xxxx-xx-xx
+captcha:
+  key-long: 6
+  img-width: 240
+  img-height: 80
+mysql:
+  addr: "127.0.0.1:3306"
+  config: "charset=utf8mb4&parseTime=True&loc=Local"
+  db-name: "gin-cli"
+  username: "root"
+  password: "Aa@6447985"
+  max-idle-conns: 10
+  max-open-conns: 100
+  log-mode: false
+  log-zap: false
+redis:
+  addr: "139.9.49.184:6379"
+  db: 0
+  password: ""
+  pool-size: 10
+zap:
+  level: "info" #debug|info|warn|error|dpanic|panic|fatal
+  format: "console" #console|json
+  prefix: "[GIN-CLI]" #日志前缀
+  director: "log"
+  link-name: "latest_log"
+  show-line: true
+  encode-level: "CapitalLevelEncoder" #LowercaseLevelEncoder(小写编码器(默认))|LowercaseColorLevelEncoder(小写编码器带颜色)|CapitalLevelEncoder(大写编码器)|CapitalColorLevelEncoder(大写编码器带颜色)
+  stacktrace-key: "stacktrace" #堆栈跟踪key
+  log-in-console: true
+  rotate-type: "lumberjack" #file-rotatelogs|lumberjack
+  file-name: "app.log" #仅lumberjack可用
+  max-size: 100 #MB
+  max-backups: 7
+  max-age: 30 #day
