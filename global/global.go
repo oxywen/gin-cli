@@ -1,7 +1,8 @@
 package global
 
 import (
-	"gin-server-cli/config"
+	"gin-server-cli/core/config"
+
 	"github.com/go-redis/redis"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"

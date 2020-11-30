@@ -4,12 +4,14 @@ import (
 	"gin-server-cli/global"
 	"gin-server-cli/middleware"
 	"gin-server-cli/router"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
 func Routers() *gin.Engine {
 	var r = gin.Default()
-	//Router.StaticFS(global.Config.Local.Path, http.Dir(global.Config.Local.Path)) // 为用户头像和文件提供静态地址
+	r.StaticFS(global.Config.ResourcePath, http.Dir(global.Config.OssDir)) // 为用户头像和文件提供静态地址
 	// Router.Use(middleware.LoadTls())  // 打开就能玩https了
 
 	//使用zap作为gin的日志中间件，但是会出现一条请求控制台打印两条日志，解决办法是关闭zap的控制台打印或者使用gin.New()

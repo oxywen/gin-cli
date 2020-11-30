@@ -3,6 +3,9 @@ system:
   port: 8088
   db-type: "mysql"
   oss-type: "local"
+  resource-path: "static"
+  oss-dir: "resource/upload"
+  template-dir: "resource/template"
   use-multipoint: false
   version: "0.0.1"
   machine_id: 1
