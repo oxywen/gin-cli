@@ -15,11 +15,11 @@ captcha:
   img-width: 240
   img-height: 80
 mysql:
-  addr: "127.0.0.1:3306"
+  addr: "139.9.49.184:3306"
   config: "charset=utf8mb4&parseTime=True&loc=Local"
-  db-name: "gin-cli"
+  db-name: "goreddit"
   username: "root"
-  password: "Aa@6447985"
+  password: "Oxywen1234560."
   max-idle-conns: 10
   max-open-conns: 100
   log-mode: false

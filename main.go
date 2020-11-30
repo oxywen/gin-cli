@@ -9,7 +9,7 @@ import (
 func main() {
 	global.Viper = core.Viper("config.yaml")
 	global.ZapLog = core.Zap()
-	global.DbEngine = initialize.MySQL()
+	global.DbEngine = initialize.Gorm()
 	global.RedisDb = initialize.Redis()
 	core.RunHTTPServer()
 }

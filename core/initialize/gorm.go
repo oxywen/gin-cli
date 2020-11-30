@@ -14,14 +14,14 @@ import (
 func Gorm() *gorm.DB {
 	switch global.Config.System.DbType {
 	case "mysql":
-		return ConnectionMySQL()
+		return InitMySQL()
 	default:
-		return ConnectionMySQL()
+		return InitMySQL()
 	}
 }
 
 // ConnectionMySQL 初始化MySQL数据库
-func ConnectionMySQL() *gorm.DB {
+func InitMySQL() *gorm.DB {
 	m := global.Config.MySQL
 	dsn := m.Username + ":" + m.Password + "@tcp(" + m.Addr + ")/" + m.DbName + "?" + m.Config
 	mysqlConfig := mysql.Config{
