@@ -3,7 +3,7 @@ package core
 import (
 	"flag"
 	"fmt"
-	"gin-server-cli/global"
+	"gin-server-cli/core/application"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
@@ -42,12 +42,12 @@ func Viper(path ...string) *viper.Viper {
 	v.OnConfigChange(func(e fsnotify.Event) {
 		fmt.Printf("the configuration file has been modified:%s\n", e.Name)
 		//同时更新全局的配置文件
-		if err := v.Unmarshal(&global.Config); err != nil {
+		if err := v.Unmarshal(&application.Config); err != nil {
 			fmt.Println(err)
 		}
 	})
 	//把配置文件反序列化为结构体
-	if err := v.Unmarshal(&global.Config); err != nil {
+	if err := v.Unmarshal(&application.Config); err != nil {
 		fmt.Printf("viper has an error unmarshal:%s\n", err.Error())
 	}
 	return v

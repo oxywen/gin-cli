@@ -1,7 +1,7 @@
 package initialize
 
 import (
-	"gin-server-cli/global"
+	"gin-server-cli/core/application"
 	"os"
 
 	"go.uber.org/zap"
@@ -12,7 +12,7 @@ import (
 
 // Gorm 初始化数据库并产生数据库全局变量
 func Gorm() *gorm.DB {
-	switch global.Config.System.DbType {
+	switch application.Config.System.DbType {
 	case "mysql":
 		return InitMySQL()
 	default:
@@ -22,7 +22,7 @@ func Gorm() *gorm.DB {
 
 // ConnectionMySQL 初始化MySQL数据库
 func InitMySQL() *gorm.DB {
-	m := global.Config.MySQL
+	m := application.Config.MySQL
 	dsn := m.Username + ":" + m.Password + "@tcp(" + m.Addr + ")/" + m.DbName + "?" + m.Config
 	mysqlConfig := mysql.Config{
 		DSN:                       dsn,   // DSN data source name
@@ -33,7 +33,7 @@ func InitMySQL() *gorm.DB {
 		SkipInitializeWithVersion: false, // 根据版本自动配置
 	}
 	if db, err := gorm.Open(mysql.New(mysqlConfig), gormConfig(m.LogMode)); err != nil {
-		global.ZapLog.Error("MySQL启动异常", zap.Any("err", err))
+		application.Log.Error("MySQL启动异常", zap.Any("err", err))
 		os.Exit(0)
 		return nil
 	} else {
@@ -46,7 +46,7 @@ func InitMySQL() *gorm.DB {
 
 // gormConfig 根据配置决定是否开启日志
 func gormConfig(mod bool) *gorm.Config {
-	if global.Config.MySQL.LogZap {
+	if application.Config.MySQL.LogZap {
 		return &gorm.Config{
 			Logger:                                   Default.LogMode(logger.Info),
 			DisableForeignKeyConstraintWhenMigrating: true,

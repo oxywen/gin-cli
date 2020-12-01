@@ -2,7 +2,7 @@ package core
 
 import (
 	"fmt"
-	"gin-server-cli/global"
+	"gin-server-cli/core/application"
 	"gin-server-cli/utils"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/natefinch/lumberjack"
@@ -14,13 +14,13 @@ import (
 )
 
 func Zap() (logger *zap.Logger) {
-	if ok, _ := utils.PathExists(global.Config.Zap.Director); !ok { // 判断是否有Director文件夹
-		fmt.Printf("create %v directory\n", global.Config.Zap.Director)
-		_ = os.Mkdir(global.Config.Zap.Director, os.ModePerm)
+	if ok, _ := utils.PathExists(application.Config.Zap.Director); !ok { // 判断是否有Director文件夹
+		fmt.Printf("create %v directory\n", application.Config.Zap.Director)
+		_ = os.Mkdir(application.Config.Zap.Director, os.ModePerm)
 	}
 	var level zapcore.Level
 	// 初始化配置文件的Level
-	switch global.Config.Zap.Level {
+	switch application.Config.Zap.Level {
 	case "debug":
 		level = zap.DebugLevel
 	case "info":
@@ -44,7 +44,7 @@ func Zap() (logger *zap.Logger) {
 	} else {
 		logger = zap.New(getEncoderCore(level))
 	}
-	if global.Config.Zap.ShowLine {
+	if application.Config.Zap.ShowLine {
 		logger = logger.WithOptions(zap.AddCaller())
 	}
 	return logger
@@ -58,7 +58,7 @@ func getEncoderConfig() (config zapcore.EncoderConfig) {
 		TimeKey:        "time",
 		NameKey:        "logger",
 		CallerKey:      "caller",
-		StacktraceKey:  global.Config.Zap.StacktraceKey,
+		StacktraceKey:  application.Config.Zap.StacktraceKey,
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
 		EncodeTime:     CustomTimeEncoder,
@@ -66,13 +66,13 @@ func getEncoderConfig() (config zapcore.EncoderConfig) {
 		EncodeCaller:   zapcore.FullCallerEncoder,
 	}
 	switch {
-	case global.Config.Zap.EncodeLevel == "LowercaseLevelEncoder": // 小写编码器(默认)
+	case application.Config.Zap.EncodeLevel == "LowercaseLevelEncoder": // 小写编码器(默认)
 		config.EncodeLevel = zapcore.LowercaseLevelEncoder
-	case global.Config.Zap.EncodeLevel == "LowercaseColorLevelEncoder": // 小写编码器带颜色
+	case application.Config.Zap.EncodeLevel == "LowercaseColorLevelEncoder": // 小写编码器带颜色
 		config.EncodeLevel = zapcore.LowercaseColorLevelEncoder
-	case global.Config.Zap.EncodeLevel == "CapitalLevelEncoder": // 大写编码器
+	case application.Config.Zap.EncodeLevel == "CapitalLevelEncoder": // 大写编码器
 		config.EncodeLevel = zapcore.CapitalLevelEncoder
-	case global.Config.Zap.EncodeLevel == "CapitalColorLevelEncoder": // 大写编码器带颜色
+	case application.Config.Zap.EncodeLevel == "CapitalColorLevelEncoder": // 大写编码器带颜色
 		config.EncodeLevel = zapcore.CapitalColorLevelEncoder
 	default:
 		config.EncodeLevel = zapcore.LowercaseLevelEncoder
@@ -82,7 +82,7 @@ func getEncoderConfig() (config zapcore.EncoderConfig) {
 
 // getEncoder 获取zapcore.Encoder
 func getEncoder() zapcore.Encoder {
-	if global.Config.Zap.Format == "json" {
+	if application.Config.Zap.Format == "json" {
 		return zapcore.NewJSONEncoder(getEncoderConfig())
 	}
 	return zapcore.NewConsoleEncoder(getEncoderConfig())
@@ -92,7 +92,7 @@ func getEncoder() zapcore.Encoder {
 func getEncoderCore(level zapcore.Level) zapcore.Core {
 	var writer zapcore.WriteSyncer
 	var err error
-	switch global.Config.Zap.RotateType {
+	switch application.Config.Zap.RotateType {
 	case "lumberjack":
 		writer = lumberJackWriteSyncer()
 	case "file-rotatelogs":
@@ -109,13 +109,13 @@ func getEncoderCore(level zapcore.Level) zapcore.Core {
 
 func lumberJackWriteSyncer() zapcore.WriteSyncer {
 	var lumberJackWriter = &lumberjack.Logger{
-		Filename:   global.Config.Zap.Director + "/" + global.Config.Zap.FileName, //日志文件的路径
-		MaxSize:    global.Config.Zap.MaxSize,                                     //在进行切割之前，日志文件的最大大小（以MB为单位）
-		MaxBackups: global.Config.Zap.MaxBackups,                                  //保留旧文件的最大个数
-		MaxAge:     global.Config.Zap.MaxAge,                                      //保留旧文件的最大天数
-		Compress:   false,                                                         //是否压缩/归档旧文件
+		Filename:   application.Config.Zap.Director + "/" + application.Config.Zap.FileName, //日志文件的路径
+		MaxSize:    application.Config.Zap.MaxSize,                                          //在进行切割之前，日志文件的最大大小（以MB为单位）
+		MaxBackups: application.Config.Zap.MaxBackups,                                       //保留旧文件的最大个数
+		MaxAge:     application.Config.Zap.MaxAge,                                           //保留旧文件的最大天数
+		Compress:   false,                                                                   //是否压缩/归档旧文件
 	}
-	if global.Config.Zap.LogInConsole {
+	if application.Config.Zap.LogInConsole {
 		return zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(lumberJackWriter))
 	}
 	return zapcore.AddSync(lumberJackWriter)
@@ -123,11 +123,11 @@ func lumberJackWriteSyncer() zapcore.WriteSyncer {
 
 func getRotateLogsWrite() (zapcore.WriteSyncer, error) {
 	fileWriter, err := rotatelogs.New(
-		path.Join(global.Config.Zap.Director, "%Y-%m-%d.log"),
+		path.Join(application.Config.Zap.Director, "%Y-%m-%d.log"),
 		rotatelogs.WithMaxAge(7*24*time.Hour),
 		rotatelogs.WithRotationTime(24*time.Hour),
 	)
-	if global.Config.Zap.LogInConsole {
+	if application.Config.Zap.LogInConsole {
 		return zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(fileWriter)), err
 	}
 	return zapcore.AddSync(fileWriter), err
@@ -135,5 +135,5 @@ func getRotateLogsWrite() (zapcore.WriteSyncer, error) {
 
 // 自定义日志输出时间格式
 func CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.Format(global.Config.Zap.Prefix + "2006-01-02 15:04:05.000"))
+	enc.AppendString(t.Format(application.Config.Zap.Prefix + "2006-01-02 15:04:05.000"))
 }

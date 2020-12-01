@@ -1,7 +1,7 @@
 package initialize
 
 import (
-	"gin-server-cli/global"
+	"gin-server-cli/core/application"
 
 	"github.com/go-redis/redis"
 	"go.uber.org/zap"
@@ -9,7 +9,7 @@ import (
 
 // Redis 初始化redis
 func Redis() *redis.Client {
-	redisConfig := global.Config.Redis
+	redisConfig := application.Config.Redis
 	client := redis.NewClient(&redis.Options{
 		Addr:     redisConfig.Addr,
 		Password: redisConfig.Password, // no password set
@@ -17,10 +17,10 @@ func Redis() *redis.Client {
 	})
 	pong, err := client.Ping().Result()
 	if err != nil {
-		global.ZapLog.Error("redis connect ping failed, err:", zap.Any("err", err))
+		application.Log.Error("redis connect ping failed, err:", zap.Any("err", err))
 		return nil
 	} else {
-		global.ZapLog.Info("redis connect ping response:", zap.String("pong", pong))
+		application.Log.Info("redis connect ping response:", zap.String("pong", pong))
 		return client
 	}
 }

@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"gin-server-cli/global"
+	"gin-server-cli/core/application"
 	"go.uber.org/zap"
 	"os"
 )
@@ -34,10 +34,10 @@ func CreateDir(dirs ...string) (err error) {
 			return err
 		}
 		if !exist {
-			global.ZapLog.Debug("create directory" + v)
+			application.Log.Debug("create directory" + v)
 			err = os.MkdirAll(v, os.ModePerm)
 			if err != nil {
-				global.ZapLog.Error("create directory"+v, zap.Any(" error:", err))
+				application.Log.Error("create directory"+v, zap.Any(" error:", err))
 			}
 		}
 	}

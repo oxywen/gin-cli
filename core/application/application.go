@@ -1,4 +1,4 @@
-package global
+package application
 
 import (
 	"gin-server-cli/core/config"
@@ -9,11 +9,12 @@ import (
 	"gorm.io/gorm"
 )
 
+//本来是global包的，但是嫌弃global不好看，换成application了
 //存放全局的对象，例如gorm engine，redis client等
 var (
 	DbEngine *gorm.DB
-	RedisDb  *redis.Client
+	Redis    *redis.Client
 	Config   config.Application
 	Viper    *viper.Viper
-	ZapLog   *zap.Logger
+	Log      *zap.Logger
 )

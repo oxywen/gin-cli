@@ -3,7 +3,7 @@ package initialize
 import (
 	"context"
 	"fmt"
-	"gin-server-cli/global"
+	"gin-server-cli/core/application"
 	"go.uber.org/zap"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/utils"
@@ -136,14 +136,14 @@ func (g *GormLogger) Trace(ctx context.Context, begin time.Time, fc func() (stri
 func (g *GormLogger) Printf(message string, data ...interface{}) {
 	switch len(data) {
 	case 0:
-		global.ZapLog.Info(message)
+		application.Log.Info(message)
 	case 1:
-		global.ZapLog.Info("gorm", zap.Any("src", data[0]))
+		application.Log.Info("gorm", zap.Any("src", data[0]))
 	case 2:
-		global.ZapLog.Info("gorm", zap.Any("src", data[0]), zap.Any("duration", data[1]))
+		application.Log.Info("gorm", zap.Any("src", data[0]), zap.Any("duration", data[1]))
 	case 3:
-		global.ZapLog.Info("gorm", zap.Any("src", data[0]), zap.Any("duration", data[1]), zap.Any("rows", data[2]))
+		application.Log.Info("gorm", zap.Any("src", data[0]), zap.Any("duration", data[1]), zap.Any("rows", data[2]))
 	case 4:
-		global.ZapLog.Info("gorm", zap.Any("src", data[0]), zap.Any("duration", data[1]), zap.Any("rows", data[2]), zap.Any("sql", data[3]))
+		application.Log.Info("gorm", zap.Any("src", data[0]), zap.Any("duration", data[1]), zap.Any("rows", data[2]), zap.Any("sql", data[3]))
 	}
 }

@@ -2,14 +2,14 @@ package main
 
 import (
 	"gin-server-cli/core"
+	"gin-server-cli/core/application"
 	"gin-server-cli/core/initialize"
-	"gin-server-cli/global"
 )
 
 func main() {
-	global.Viper = core.Viper("config.yaml")
-	global.ZapLog = core.Zap()
-	global.DbEngine = initialize.Gorm()
-	global.RedisDb = initialize.Redis()
+	application.Viper = core.Viper("config.yaml")
+	application.Log = core.Zap()
+	application.DbEngine = initialize.Gorm()
+	application.Redis = initialize.Redis()
 	core.RunHTTPServer()
 }

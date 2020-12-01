@@ -7,6 +7,6 @@ import (
 
 func InitPublicRouter(Router *gin.RouterGroup) (R gin.IRoutes) {
 	//公开的，不做鉴权的路由
-	Router.GET("/login/:id", v1.Login)
+	Router.GET("/hello/:name", v1.Hello)
 	return Router
 }
